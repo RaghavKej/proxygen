@@ -78,6 +78,11 @@ DEFINE_bool(
     true,
     "Enable HyStart slow start exit-point detection in Cubic. When false, "
     "slow start only exits when cwnd reaches ssthresh or on loss.");
+DEFINE_bool(
+    ratelimited_cwnd_increase_enabled,
+    false,
+    "Enable draft-ietf-ccwg-ratelimited-increase functionality. Only supported "
+    "with Cubic. Reno-style cwnd cap (2*maxFS in slow start or maxFS + 1 MSS)");
 DEFINE_int32(conn_flow_control, 1024 * 1024 * 10, "Connection flow control");
 DEFINE_int32(stream_flow_control, 256 * 1024, "Stream flow control");
 DEFINE_int32(max_receive_packet_size,
@@ -310,6 +315,8 @@ void initializeTransportSettings(HQToolParams& hqUberParams) {
         hqParams.congestionControl.value();
   }
   hqParams.transportSettings.ccaConfig.hystartEnabled = FLAGS_hystart;
+  hqParams.transportSettings.ccaConfig.ratelimitedCwndIncreaseEnabled =
+      FLAGS_ratelimited_cwnd_increase_enabled;
   hqParams.transportSettings.maxRecvPacketSize = FLAGS_max_receive_packet_size;
   hqParams.transportSettings.numGROBuffers_ = FLAGS_num_gro_buffers;
   hqParams.transportSettings.pacingEnabled = FLAGS_pacing;
